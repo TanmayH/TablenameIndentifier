@@ -15,8 +15,10 @@ import opennlp.tools.tokenize.TokenizerModel;
 import java.util.*; 
 
 public class POSTaggerExample {
+	 public static  String tablename="";
 	 static HashMap<String,ArrayList<String>> map=new HashMap<>();	
-	 static HashMap<String,ArrayList<String>> tab_colnames=new HashMap<>();
+	// static HashMap<String,ArrayList<String>> tab_colnames=new HashMap<>();
+	 
 		 
 	public static void mapper(String mapkey,String Item)
 	{
@@ -45,7 +47,7 @@ public class POSTaggerExample {
         
         try {
            
-        	String sentence = "customers of Atlanta";
+        	String sentence = "customers from New York";
             tokenModelIn = new FileInputStream("en-token.bin");
             TokenizerModel tokenModel = new TokenizerModel(tokenModelIn);
             Tokenizer tokenizer = new TokenizerME(tokenModel);
@@ -100,9 +102,9 @@ public class POSTaggerExample {
           {
         	  b.initialisenoun(nounlist.get(i));
         	  b.BiGram();
-          
-          
-          }  
+           }
+           if(!b.tablename.matches(""))
+           System.out.println("The table name is "+b.tablename);
           }      
         catch (IOException e)
         {

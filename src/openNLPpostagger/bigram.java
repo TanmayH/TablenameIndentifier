@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class bigram{
+public class bigram extends POSTaggerExample
+{
 	public static ArrayList<String> Trainlist = new ArrayList<String>();
 	public String[][] bigramizedWords = new String[100][1000];
 	public String[] testwordbigram = new String[100];
 	public String[] words = new String[100];
     public static String testword;
+    
     public static int tracker=0, tracker1 = 0,tracker2=0;
     public int[] bigramcount = new int[100];
 	public double matches = 0;
@@ -184,7 +186,9 @@ public void bigramize()
   }
 	if(id!=-1&&results[id]>0.50)
 	{
-		System.out.println("The table is :" + words[id]);
+	    tablename=words[id];
+		//System.out.println("The table is :" + words[id]);
+		
 	}
 	
 }
