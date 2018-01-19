@@ -1,3 +1,5 @@
 customers
 geography
-science
+colors
+clothes 
+sales

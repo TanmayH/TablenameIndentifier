@@ -186,6 +186,7 @@ public void bigramize()
   }
 	if(id!=-1&&results[id]>0.50)
 	{
+	    //idfrombigram=id;
 	    tablename=words[id];
 		//System.out.println("The table is :" + words[id]);
 		

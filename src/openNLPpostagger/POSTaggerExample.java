@@ -16,7 +16,12 @@ import java.util.*;
 
 public class POSTaggerExample {
 	 public static  String tablename="";
-	 static HashMap<String,ArrayList<String>> map=new HashMap<>();	
+	 public static int idfrombigram=-1;
+	 static ArrayList<String> tablenameslist=new ArrayList<>();
+	 static ArrayList<String> columnnameslist=new ArrayList<>();
+	
+	 static HashMap<String,ArrayList<String>> map=new HashMap<>();
+	 
 	// static HashMap<String,ArrayList<String>> tab_colnames=new HashMap<>();
 	 
 		 
@@ -47,12 +52,11 @@ public class POSTaggerExample {
         
         try {
            
-        	String sentence = "customers from New York";
+        	String sentence = "sale from  New Jersey";
             tokenModelIn = new FileInputStream("en-token.bin");
             TokenizerModel tokenModel = new TokenizerModel(tokenModelIn);
             Tokenizer tokenizer = new TokenizerME(tokenModel);
             String tokens[] = tokenizer.tokenize(sentence);
- 
             // Parts-Of-Speech Tagging
             // reading parts-of-speech model to a stream
             posModelIn = new FileInputStream("en-pos-maxent.bin");
@@ -84,33 +88,92 @@ public class POSTaggerExample {
             	}
             	mapper(tags[i],tokens[i]);
             }
-            
-      ArrayList<String> nounlist=map.get("NN");
-      ArrayList<String> tablename=new ArrayList<String>();
-      ArrayList<String> colname=new ArrayList<String>();
-//      String tablename1="";
+        //this ArrayList will filter out all the nouns    
+        ArrayList<String> nounlist=map.get("NN");
       
- //     System.out.println("The nouns in the sentence are:");
-//            for(String noun:nounlist)
-//            {
-//          //  	System.out.println(noun);    
-//            }
-            bigram b=new bigram();
-             b.getbigramready();
-             
-           for(int i=0;i<nounlist.size();i++) 
-          {
-        	  b.initialisenoun(nounlist.get(i));
-        	  b.BiGram();
-           }
-           if(!b.tablename.matches(""))
-           System.out.println("The table name is "+b.tablename);
-          }      
+       
+        
+        tablenameslist.clear();
+        simplechecker(nounlist);
+        if(tablenameslist.size()==0)
+        {
+        	  bigramchecker(nounlist);
+        	  if(tablenameslist.size()==0)
+              {
+              // Please call the hypernyms function here 
+              
+              }
+        
+        }
+        if(tablenameslist.size()>0)
+        {
+          System.out.println(tablenameslist.toString());
+          columnfinder(tablenameslist.get(0));  
+        }
+        else
+        {
+        	System.out.println("Ask user to re-enter the query");
+        }
+        System.out.println(nounlist.toString());
+      
+
+        }
         catch (IOException e)
         {
 
         }
             
-        }
-    }
+	}
+     public static void simplechecker(ArrayList<String> nounlist)
+     {
+    	 NLP n=new NLP();
+    	 n.databasecreate();
+    	 for(int i=0;i<nounlist.size();i++)
+    	 {
+    		 if(n.m.containsKey(nounlist.get(i)))
+    	 {
+    		tablenameslist.add(nounlist.get(i));	 
+    		nounlist.remove(i);
+    		System.out.println("table found");
+    		break;
+    	 }
+        }	 
+     }
+	
+	
+	
+	//this method performs the bigram check
+	public static void bigramchecker(ArrayList<String> nounlist)
+	{
+	    bigram b=new bigram();
+        b.getbigramready();
+        
+      for(int i=0;i<nounlist.size();i++) 
+     {
+   	  b.initialisenoun(nounlist.get(i));
+   	  b.BiGram();
+     }
+      if(!b.tablename.matches(""))
+     {
+    	  tablenameslist.add(b.tablename);
+    	  if(idfrombigram!=-1)
+          {
+    		 // nounlist.remove(idfrombigram);
+          }
+     }
+    	  System.out.println("The table name is "+b.tablename);
+    	  
+     }
+	public static void columnfinder(String cols)
+	{
+		 NLP c1=new NLP();
+	     c1.databasecreate();
+	     columnnameslist=c1.m.get(cols);
+	     System.out.println(columnnameslist.toString());
+	         
+	}
+	}      
+	
+    
+    
 
